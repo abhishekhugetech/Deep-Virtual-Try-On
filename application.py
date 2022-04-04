@@ -2,15 +2,30 @@
 from __future__ import print_function
 
 import io
+from PIL import Image
 from pprint import pprint
+import io
 from PIL import Image, ImageDraw, ExifTags, ImageColor
 import numpy as np
 import cv2
 import os,sys,shutil
+from PIL import Image
+import numpy as np
+import cv2
 import glob
 from detect_edges_image import CropLayer
 import argparse
+import os,sys,shutil
+from PIL import Image
+import numpy as np
+import cv2
+import glob
+import argparse   
 from flask import Flask, request, render_template, send_from_directory
+import os
+from PIL import Image
+import shutil
+from flask_ngrok import run_with_ngrok
 import torch
 import torch.nn as nn
 from models.networks import Define_G, Define_D
@@ -30,6 +45,7 @@ import numpy as np
 import subprocess
 import shlex
 from torchvision import utils
+from PIL import Image
 from utils import pose_utils
 import torch.nn.functional as F
 from utils.warp_image import warped_image
@@ -37,12 +53,23 @@ from lib.geometric_matching_multi_gpu import GMM
 from torchvision import utils
 from PIL import Image
 import time
+import cv2
+import argparse
 from datetime import datetime
+import os
+import sys
+import time
 import scipy.misc
 import scipy.io as sio
+import cv2
+import shutil
 from glob import glob
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
+import glob
+
 import tensorflow as tf
+import numpy as np
+from PIL import Image
 #from utils import *
 from utils.model_pgn import PGNModel
 from utils.utils import decode_labels, inv_preprocess, prepare_label, save, load
@@ -50,6 +77,8 @@ from utils.ops import conv2d, max_pool, linear
 from utils.image_reader import ImageReader
 from utils.image_reader_pgn import ImageReaderPGN
 from past.builtins import xrange
+import glob
+import argparse
 
 DATA_TYPE = ['png','PNG','jpg','JPG']
 def makedataset():
@@ -311,8 +340,13 @@ for model, path in zip(models, paths):
     load_model(model, path)    
 print('==>loaded model')
 
-threads = tf.train.start_queue_runners(coord=coord, sess=sess)
+
+
+
+
+
 application = app = Flask(__name__)
+run_with_ngrok(app)  # Start ngrok when app is run
 APP_ROOT = os.path.basename('.')
 # default access page
 @app.route("/")
@@ -512,13 +546,7 @@ def process():
       im = im.convert("RGB")
   
     im.save("datasets/CIHP/images/person.jpg")
-     
     makedataset()
-     # Start queue threads.
- 
-    os.environ["CUDA_VISIBLE_DEVICES"]="0"
-    cmd = './openpose.bin --image_dir "/home/ubuntu/CIHP_PGN-master/dataset/images/" --display 0 --render_pose 0 --model_pose COCO --write_json "/home/ubuntu/CIHP_PGN-master/dataset/pose_coco/"'
-    os.system(cmd)
         # evaluate prosessing
     parsing_dir = 'dataset/parse_cihp'
     if os.path.exists(parsing_dir):
@@ -577,5 +605,4 @@ def send_image(filename):
 
 
 if __name__ == "__main__":
-    application.run(host='0.0.0.0')
-
+    application.run()
