@@ -11,6 +11,7 @@ import glob
 from detect_edges_image import CropLayer
 import argparse
 from flask import Flask, request, render_template, send_from_directory
+from flask_ngrok import run_with_ngrok
 import torch
 import torch.nn as nn
 from models.networks import Define_G, Define_D
@@ -326,6 +327,8 @@ print('==>loaded model')
 
 
 application = app = Flask(__name__)
+run_with_ngrok(app)  # Start ngrok when app is run
+
 APP_ROOT = os.path.basename('.')
 # default access page
 @app.route("/")
@@ -597,5 +600,5 @@ def send_image(filename):
 
 
 if __name__ == "__main__":
-    application.run(host='0.0.0.0', port=80)
+    application.run()
 
